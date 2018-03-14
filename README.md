@@ -1,6 +1,8 @@
 # crypto_market_cap
 
-An application to practice framework Flutter.
+An application to practice framework Flutter using network conection and infinity scroll.
+
+<img src="https://github.com/RafaelBarbosatec/exemple_flutter_cryptocurrency/blob/master/imgs/print_app.png" width="300"/>
 
 # Sobre
 
