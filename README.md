@@ -1,8 +1,9 @@
 # crypto_market_cap
 
-A new Flutter application.
+An application to practice framework Flutter.
 
-## Getting Started
+# Sobre
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+- Language: [Dart](https://www.dartlang.org/)
+- Framework: [Flutter](https://flutter.io/)
+- API: [Coinmarketcap](https://coinmarketcap.com/api/)
