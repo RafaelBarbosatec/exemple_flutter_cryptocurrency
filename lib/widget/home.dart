@@ -1,128 +1,96 @@
+
+import 'package:crypto_market_cap/support/BlocProvider.dart';
+import 'package:crypto_market_cap/widget/homeBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'dart:async';
-import '../conection/api.dart';
 
 
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
+
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
-  @override
-  _HomePageState createState() => new _HomePageState();
-}
+  static Widget create(){
 
-class _HomePageState extends State<HomePage> {
-
-  List _currencies = new List();
-
-  int page = 0;
-
-  bool carregando = false;
-
-  CryptoApi repository = new CryptoApi();
-
-  void _NextPage(int page) async {
-
-    setState((){
-
-      this.page++;
-      carregando = true;
-
-    });
-
-    List c = await repository.loadCrypto(page,20);
-
-    if(_currencies != null) {
-
-      setState(() {
-
-        _currencies.addAll(c);
-        carregando = false;
-
-      });
-
-    }
+    return BlocProvider<HomeBloc>(
+      bloc: HomeBloc(),
+      child: HomePage(title: "Bloc",),
+    );
 
   }
 
   @override
   Widget build(BuildContext context) {
 
-    if(page == 0){
-      _NextPage(page);
-    }
+    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
+    bloc.myRefresh();
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget.title),
-        actions: <Widget>[_buildProgress()],
+        title: new Text(title),
+        actions: <Widget>[_buildProgress(bloc)],
       ),
-      body: _buildBody(),
+      body: _buildBody(bloc),
       backgroundColor: Colors.blue,
     );
   }
 
-  Widget _buildProgress(){
+  Widget _buildProgress(HomeBloc bloc){
 
-    return carregando ? new Container(
-        margin: new EdgeInsets.all(5.0),
-        padding: new EdgeInsets.all(5.0),
-        child: new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)
-    ) : new Container();
+    return StreamBuilder<bool>(
+      stream: bloc.progressController.stream,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+        return (snapshot?.data ?? false) ? new Container(
+            margin: new EdgeInsets.all(5.0),
+            padding: new EdgeInsets.all(5.0),
+            child: new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)
+        ) : new Container();
+      },
+    );
 
   }
 
-  Widget _buildBody(){
+  Widget _buildBody(HomeBloc bloc){
     return new Container(
       margin: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
       child: new Column(
         children: <Widget>[
-          _getListViewWidget()
+          _getListViewWidget(bloc)
         ],
       ),
     );
   }
 
-  Widget _getListViewWidget(){
+  Widget _getListViewWidget(HomeBloc bloc){
 
-    ListView listView = new ListView.builder(
-        itemCount: _currencies.length,
-        itemBuilder: (context, index){
+    return Flexible(
+      child: StreamBuilder<List>(
+        stream: bloc.listController.stream,
+        builder: (BuildContext context, AsyncSnapshot<List> snapshot){
 
-          final Map currency = _currencies[index];
+          return RefreshIndicator(
+              onRefresh: bloc.myRefresh,
+              child: ListView.builder(
+                  itemCount: snapshot?.data?.length ?? 00,
+                  itemBuilder: (context, index){
 
-          if(_currencies.length != null)
-            if(index > _currencies.length -5 && !carregando){
+                    final Map currency = snapshot.data[index];
 
-              _NextPage(page);
-            }
+                    if(snapshot.data.length != null)
+                      if(index > snapshot.data.length -5){
+                        bloc.nextPage();
+                      }
 
-          return _getListItemWidget(currency);
-        });
+                    return _getListItemWidget(currency);
 
-    RefreshIndicator refreshIndicator = new RefreshIndicator(
-        onRefresh: onRefresh,
-        child: listView
+                  })
+          );
+        },
+      ),
     );
 
-    return new Flexible(
-        child: refreshIndicator
-    );
-
-  }
-
-  Future onRefresh() async {
-    setState((){
-      _currencies.clear();
-      page = 0;
-    });
-
-    _NextPage(page);
-
-    return true;
   }
 
   Widget _getListItemWidget(currency){
@@ -151,7 +119,6 @@ class _HomePageState extends State<HomePage> {
 
 
   }
-
 
   CircleAvatar _getLeadingWidget(String currencyName,String symbol){
 
@@ -200,10 +167,10 @@ class _HomePageState extends State<HomePage> {
   Widget _getTextPeriodoTrailig(){
 
     return new Text("24h",
-                    style: new TextStyle(
-                        fontSize: 8.0
-                    ),
-                );
+      style: new TextStyle(
+          fontSize: 8.0
+      ),
+    );
 
   }
 
@@ -218,5 +185,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

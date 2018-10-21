@@ -1,3 +1,6 @@
+
+import 'package:crypto_market_cap/support/BlocProvider.dart';
+import 'package:crypto_market_cap/widget/homeBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'widget/home.dart';
@@ -13,7 +16,7 @@ class CryptoApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new HomePage(title: 'Cryptocurrency MarketCap'),
+      home: HomePage.create(),
     );
   }
 }

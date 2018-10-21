@@ -15,7 +15,9 @@ class CryptoApi{
     // Await basically pauses execution until the get() function returns a Response
     http.Response response = await http.get(apiUrl);
     // Using the JSON class to decode the JSON String
-    return JSON.decode(response.body);
+
+    const JsonDecoder decoder = const JsonDecoder();
+    return decoder.convert(response.body);
 
   }
 }
