@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 abstract class BlocBase {
   void dispose();
   void initState();
+  void didChangeDependencies();
 }
 
 // Generic BLoC provider
@@ -39,7 +40,7 @@ class _BlocProviderState<T> extends State<BlocProvider<BlocBase>>{
 
   @override
   void didChangeDependencies() {
-    print("didChangeDependencies");
+    widget.bloc.didChangeDependencies();
     super.didChangeDependencies();
   }
 

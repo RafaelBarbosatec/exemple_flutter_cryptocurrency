@@ -18,11 +18,6 @@ class HomeBloc implements BlocBase {
 
   CryptoApi repository = new CryptoApi();
 
-  HomeBloc(){
-    listController.sink.add(_currencies);
-    progressController.sink.add(false);
-  }
-
   void _NextPage(int page) async {
 
     this._page++;
@@ -67,8 +62,12 @@ class HomeBloc implements BlocBase {
 
   @override
   void initState() {
-    _NextPage(0);
     print("initState");
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("didChangeDependencies");
   }
 
 }
