@@ -4,8 +4,6 @@ import 'package:crypto_market_cap/widget/homeBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-
-
 class HomePage extends StatelessWidget {
 
   HomePage({Key key, this.title}) : super(key: key);
@@ -39,9 +37,9 @@ class HomePage extends StatelessWidget {
 
   Widget _buildProgress(HomeBloc bloc){
 
-    return StreamBuilder<bool>(
+    return StreamBuilder(
       stream: bloc.progressController.stream,
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+      builder: (BuildContext context, AsyncSnapshot snapshot){
         return (snapshot?.data ?? false) ? new Container(
             margin: new EdgeInsets.all(5.0),
             padding: new EdgeInsets.all(5.0),
@@ -66,14 +64,14 @@ class HomePage extends StatelessWidget {
   Widget _getListViewWidget(HomeBloc bloc){
 
     return Flexible(
-      child: StreamBuilder<List>(
+      child: StreamBuilder(
         stream: bloc.listController.stream,
-        builder: (BuildContext context, AsyncSnapshot<List> snapshot){
+        builder: (BuildContext context, AsyncSnapshot snapshot){
 
           return RefreshIndicator(
               onRefresh: bloc.myRefresh,
               child: ListView.builder(
-                  itemCount: snapshot?.data?.length ?? 00,
+                  itemCount: snapshot.hasData? snapshot.data.length : 0,
                   itemBuilder: (context, index){
 
                     final Map currency = snapshot.data[index];
