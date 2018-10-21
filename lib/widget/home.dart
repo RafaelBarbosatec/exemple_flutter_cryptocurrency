@@ -39,8 +39,9 @@ class HomePage extends StatelessWidget {
 
     return StreamBuilder(
       stream: bloc.progressController.stream,
+      initialData: false,
       builder: (BuildContext context, AsyncSnapshot snapshot){
-        return (snapshot?.data ?? false) ? new Container(
+        return snapshot.data ? new Container(
             margin: new EdgeInsets.all(5.0),
             padding: new EdgeInsets.all(5.0),
             child: new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)
@@ -66,12 +67,13 @@ class HomePage extends StatelessWidget {
     return Flexible(
       child: StreamBuilder(
         stream: bloc.listController.stream,
+        initialData: new List(),
         builder: (BuildContext context, AsyncSnapshot snapshot){
 
           return RefreshIndicator(
               onRefresh: bloc.myRefresh,
               child: ListView.builder(
-                  itemCount: snapshot.hasData? snapshot.data.length : 0,
+                  itemCount: snapshot.data.length,
                   itemBuilder: (context, index){
 
                     final Map currency = snapshot.data[index];
