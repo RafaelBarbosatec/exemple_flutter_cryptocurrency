@@ -9,3 +9,4 @@ An application to practice framework Flutter using network conection and infinit
 - Language: [Dart](https://www.dartlang.org/)
 - Framework: [Flutter](https://flutter.io/)
 - API: [Coinmarketcap](https://coinmarketcap.com/api/)
+- Architeture: [BLoC](https://www.didierboelens.com/2018/08/reactive-programming---streams---bloc/)
